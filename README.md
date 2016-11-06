@@ -24,3 +24,9 @@ ToDo
          2. These queues contain next and prev employee
 
         Adjust queues to reflect new priorities.
+
+Post TODO:
+1. Report
+2. Makefile
+3. UML Diagram
+4. TBA

@@ -22,4 +22,5 @@ ToDo
       4. If:
          1. More queues for other books and
          2. These queues contain next and prev employee
+
         Adjust queues to reflect new priorities.

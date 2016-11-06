@@ -3,7 +3,8 @@
 CS303, Fall 2016
 Justin Laykovich
 
-ToDo
+####ToDo
+
 1. Keep track of two lists:
    1. Books to be circulated
    2. Archived books
@@ -25,7 +26,8 @@ ToDo
 
         Adjust queues to reflect new priorities.
 
-Post TODO:
+####Post TODO:
+
 1. Report
 2. Makefile
 3. UML Diagram

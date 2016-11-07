@@ -11,24 +11,32 @@ void Library::add_book(const string& book_name) {
 }
 
 void Library::add_employee(const string& employee_name) {
-   Employee new_employee = Employee(employee_name,0,0);
-   employees.push_back(Employee(employee_name,0,0));
+
+   Employee new_employee = Employee(employee_name);
+   employees.push_back(new_employee);
    cout << "Added " << new_employee.name << " to employees." << endl;
+
+   int size = books.size();
+   for(int i = 0; i < size; i++)
+      books[i].waiting_list.insert(new_employee);
+
 }
 
 void Library::circulate_book(const string& book_name, Date date) {
+
    int index = find_book(book_name,archived_books);
+
    if(index == -1)
       throw runtime_error("No book found in archives: " + book_name);
 
    Book book = std::move(archived_books[index]);
    book.circulation_start_date = date;
    book.circulation_last_date = date;
+   book.archived = false;
    book.waiting_list = PriorityQueue<Employee>(employees);
 
    Employee employee = book.waiting_list.extract_max();
    book.current_employee = employee;
-   book.archived = false;
 
    int size = books.size();
    for(int i = 0; i < size; i++)
@@ -40,20 +48,25 @@ void Library::circulate_book(const string& book_name, Date date) {
 }
 
 void Library::pass_on(const string& book_name, Date date) {
+
    int index = find_book(book_name, books);
+
    if(index == -1)
       throw runtime_error("No book found in circulation: " + book_name);
 
    Book *book = &(books[index]);
    Employee employee = book->current_employee;
-   employee.retaining_time += date - book->circulation_last_date;
+   employee.retaining_time += date - (book->circulation_last_date);
 
    cout << employee.name << " retaining time: " << employee.retaining_time << endl;
    employees[find_employee(employee.name)] = employee;
 
    if(book->waiting_list.is_empty()) {
+
       book->circulation_end_date = date;
+      book->circulation_last_date = date;
       book->archived = true;
+
       archived_books.push_back(*book);
 
       int size= books.size();
@@ -61,15 +74,18 @@ void Library::pass_on(const string& book_name, Date date) {
          books[i].waiting_list.invalidate(employee);
 
       cout << "Moved " << book->name << " to archive." << endl;
+
       if(books.size() == 1)
          books.pop_back();
       else
          books.erase(books.begin() + index);
 
+      return;
    }
    else {
+
       Employee newEmployee = book->waiting_list.extract_max();
-      newEmployee.waiting_time += date - book->circulation_start_date;
+      newEmployee.waiting_time += date - (book->circulation_start_date);
       cout << newEmployee.name << " wait time: " << newEmployee.waiting_time << endl;
 
       book->current_employee = newEmployee;
@@ -79,9 +95,9 @@ void Library::pass_on(const string& book_name, Date date) {
          books[i].waiting_list.invalidate(newEmployee);
       }
       cout << "Moved " << book->name << " from " << employee.name << " to " << newEmployee.name << endl;
+      book->circulation_last_date = date;
    }
 
-   book->circulation_last_date = date;
 }
 
 int Library::find_book(const string& book_name, std::vector<Book> book_list) {

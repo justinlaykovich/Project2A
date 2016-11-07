@@ -25,8 +25,9 @@ void PriorityQueue<T>::insert(const T& item) {
    size++;
 
    for(int i = (size-1); i > 0; i = (i-1)/2)
-      if(!(data[(i-1)/2] > data[i]))
+      if(!(data[(i-1)/2] > data[i])) {
          std::swap(data[(i-1)/2],data[i]);
+      }
       else
          break;
 }
@@ -87,9 +88,8 @@ template<class T>
 void PriorityQueue<T>::invalidate(const T& item) {
    for(int i = 0; i < size; i++)
       if(data[i] == item) {
-         cout << "Invalidated." << endl;
          remove(i);
-         insert(item);
+         insert(std::move(item));
          break;
       }
 }

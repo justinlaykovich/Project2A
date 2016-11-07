@@ -1,4 +1,4 @@
-#include"EmployeePQueue.h"
+#include"PQueue.h"
 #include<stdexcept>
 #include<algorithm>
 #include<iostream>
@@ -6,18 +6,21 @@
 using std::cout;
 using std::endl;
 
-EmployeeEmployeePQueue::EmployeePQueue() {
+template<class T>
+PriorityQueue<T>::PriorityQueue() {
    size = 0;
 }
 
-EmployeePQueue::EmployeePQueue(const std::vector<Employee>& inserted) {
+template<class T>
+PriorityQueue<T>::PriorityQueue(const std::vector<T>& inserted) {
    size = 0;
    int insertSize = inserted.size();
    for(int i = 0; i < insertSize; i++)
       insert(inserted[i]);
 }
 
-void EmployeePQueue::insert(const Employee& item) {
+template<class T>
+void PriorityQueue<T>::insert(const T& item) {
    data.push_back(item);
    size++;
 
@@ -28,11 +31,13 @@ void EmployeePQueue::insert(const Employee& item) {
          break;
 }
 
-void EmployeePQueue::max_heapify() {
+template<class T>
+void PriorityQueue<T>::max_heapify() {
    max_heapify(0);
 }
 
-void EmployeePQueue::max_heapify(int i) {
+template<class T>
+void PriorityQueue<T>::max_heapify(int i) {
    int left = 2*i + 1;
    int right = 2*i + 2;
    int largest = i;
@@ -50,17 +55,20 @@ void EmployeePQueue::max_heapify(int i) {
    }
 }
 
-Employee EmployeePQueue::extract_max() {
-   Employee item = data[0];
+template<class T>
+T PriorityQueue<T>::extract_max() {
+   T item = data[0];
    remove(0);
    return item;
 }
 
-Employee EmployeePQueue::top() {
+template<class T>
+T PriorityQueue<T>::top() {
    return data[0];
 }
 
-void EmployeePQueue::remove(const int& index){
+template<class T>
+void PriorityQueue<T>::remove(const int& index){
    if(index >= size || index < -1)
       throw;
 
@@ -70,11 +78,13 @@ void EmployeePQueue::remove(const int& index){
    max_heapify(index);
 }
 
-bool EmployeePQueue::is_empty() {
+template<class T>
+bool PriorityQueue<T>::is_empty() {
    return size == 0;
 }
 
-void EmployeePQueue::invalidate(const Employee& item) {
+template<class T>
+void PriorityQueue<T>::invalidate(const T& item) {
    for(int i = 0; i < size; i++)
       if(data[i] == item) {
          cout << "Invalidated." << endl;

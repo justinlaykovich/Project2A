@@ -1,18 +1,19 @@
-#ifndef HEAP_H
-#define HEAP_H
+#ifndef PQueue_H
+#define PQueue_H
 
 #include<vector>
 
 template <class T>
-class MaxHeap {
+class PriorityQueue {
 public:
-   MaxHeap():MaxHeap({}){};
-   MaxHeap(const std::vector<T>&);
+   PriorityQueue();
+   PriorityQueue(const std::vector<T>&);
    void insert(const T& item);
+   void invalidate(const int&);
+   void invalidate(T&);
+   bool is_empty();
    T extract_max();
-   int get_size();
-
-   const std::vector<T>& as_vector();
+   T top();
 private:
    std::vector<T> data;
    int size;

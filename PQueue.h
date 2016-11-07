@@ -9,8 +9,7 @@ public:
    PriorityQueue();
    PriorityQueue(const std::vector<T>&);
    void insert(const T& item);
-   void invalidate(const int&);
-   void invalidate(T&);
+   void invalidate(const T&);
    bool is_empty();
    T extract_max();
    T top();

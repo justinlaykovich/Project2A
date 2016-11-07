@@ -9,11 +9,14 @@ struct Employee {
    string name;
    int waiting_time;
    int retaining_time;
-   bool operator<(const Employee& rhs) {
-      return (waiting_time - retaining_time) < (rhs.waiting_time - rhs.retaining_time);
+   int priority() const {
+      return (waiting_time - retaining_time);
    }
    bool operator>(const Employee& rhs) {
-      return (waiting_time - retaining_time) > (rhs.waiting_time - rhs.retaining_time);
+      return (priority() > rhs.priority());
+   }
+   bool operator<(const Employee& rhs) {
+      return (priority() < rhs.priority());
    }
    bool operator==(const Employee& rhs) {
       return name == rhs.name;
@@ -29,8 +32,9 @@ struct Book {
    string name;
    Date circulation_start_date;
    Date circulation_end_date;
+   Date circulation_last_date;
    Employee current_employee;
-   bool archived;
+   bool archived = true;
    PriorityQueue<Employee> waiting_list;
    bool operator==(const Book& rhs) {
       return name == rhs.name;

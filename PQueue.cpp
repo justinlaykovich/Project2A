@@ -1,6 +1,10 @@
 #include"PQueue.h"
 #include<stdexcept>
 #include<algorithm>
+#include<iostream>
+
+using std::cout;
+using std::endl;
 
 template<class T>
 PriorityQueue<T>::PriorityQueue() {
@@ -21,7 +25,7 @@ void PriorityQueue<T>::insert(const T& item) {
    size++;
 
    for(int i = (size-1); i > 0; i = (i-1)/2)
-      if(data[(i-1)/2] < data[i])
+      if(!(data[(i-1)/2] > data[i]))
          std::swap(data[(i-1)/2],data[i]);
       else
          break;
@@ -80,19 +84,12 @@ bool PriorityQueue<T>::is_empty() {
 }
 
 template<class T>
-void PriorityQueue<T>::invalidate(const int& index) {
-   T item = data[index];
-   remove(index);
-   insert(item);
-}
-
-template<class T>
-void PriorityQueue<T>::invalidate(T& item) {
+void PriorityQueue<T>::invalidate(const T& item) {
    for(int i = 0; i < size; i++)
       if(data[i] == item) {
-         data[i] = item;
-         swap(data[size-1],data[i]);
-         max_heapify();
+         cout << "Invalidated." << endl;
+         remove(i);
+         insert(item);
          break;
       }
 }

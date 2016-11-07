@@ -1,5 +1,5 @@
-#ifndef LIBRARY_H
-#define LIBRARY_H
+#ifndef _LIBRARY_H_
+#define _LIBRARY_H_
 #include<string>
 #include<vector>
 #include"Date.h"

@@ -1,5 +1,5 @@
-#ifndef EMPLOYEE_H
-#define EMPLOYEE_H
+#ifndef _EMPLOYEE_H_
+#define _EMPLOYEE_H_
 
 class Employee {
 public:

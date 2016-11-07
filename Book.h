@@ -1,5 +1,5 @@
-#ifndef BOOK_H
-#define BOOK_H
+#ifndef _BOOK_H_
+#define _BOOK_H_
 
 class Book {
 public:

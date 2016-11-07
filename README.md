@@ -1,9 +1,9 @@
-###Using Queues, design a system that allows the circulation fo books to employees.
+###Using Queues, design a system that allows the circulation of books to employees.
 
 CS303, Fall 2016
 Justin Laykovich
 
-####ToDo
+####ToDo:
 
 1. Keep track of two lists:
    1. Books to be circulated
@@ -26,7 +26,7 @@ Justin Laykovich
 
         Adjust queues to reflect new priorities.
 
-####Post TODO:
+####Post ToDo:
 
 1. Report
 2. Makefile

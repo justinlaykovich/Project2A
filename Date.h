@@ -31,7 +31,7 @@ public:
 
    Date(int year, int month, int day, DateFormat format = DateFormat::US) : year(year), month(month), day(day), format(format){
       if (!valid_date(year, month, day))
-         throw new string("The date is not valid");
+         throw runtime_error("The date is not valid");
    }
 
    void set_format(DateFormat format){
@@ -88,7 +88,7 @@ public:
       }
 
       if (!valid_date(year, month, day))
-         throw new string(" The date is not valid");
+         throw runtime_error(" The date is not valid");
 
       return Date(year, month, day, format);
 
@@ -117,7 +117,7 @@ public:
    //checks if this date is valid
    void check_valid(){
       if (!valid_date(year, month, day))
-         throw new string("The date is invalid");
+         throw runtime_error("The date is invalid");
    }
 
    //checks if a date is valid
@@ -169,23 +169,23 @@ public:
 
    //subtract a number of days from a date
    void subtract_days(int days){
-      int reminder = days;
+      int remainder = days;
 
-      while (reminder > 0){
+      while (remainder > 0){
 
-         if (day - reminder >= 1){ // applies to all months
-            day -= reminder;
-            reminder = 0;
+         if (day - remainder >= 1){ // applies to all months
+            day -= remainder;
+            remainder = 0;
          }
          else if (month == 1){ //treat December differently
             year--;
             month = 12;
-            reminder -= day;
+            remainder -= day;
             day = days_of_month(month);
          }
          else { //applies to all other months
             month--;
-            reminder -= day;
+            remainder -= day;
             day = days_of_month(month);
          }
       }
@@ -199,25 +199,25 @@ public:
       if (days<0)
          subtract_days(-1 * days);
 
-      int reminder = days;
+      int remainder = days;
 
-      while (reminder > 0){
+      while (remainder > 0){
 
          int limit = days_of_month(month);
 
-         if (reminder + day <= limit){ // applies to all months
-            day += reminder;
-            reminder = 0;
+         if (remainder + day <= limit){ // applies to all months
+            day += remainder;
+            remainder = 0;
          }
          else if (month == 12){ //treat December differently
             year++;
             month = 1;
-            reminder -= limit - day;
+            remainder -= limit - day;
             day = 0;
          }
          else { //applies to all other months
             month++;
-            reminder -= limit - day;
+            remainder -= limit - day;
             day = 0;
          }
       }
@@ -225,7 +225,7 @@ public:
    }
 
    //difference between two dates in number of days.
-   int operator - (const Date& other) const{ 
+   int operator - (const Date& other) const{
       int year_r = 0, month_r = 0, day_r = 0;
 
       if (this->operator<(other))

@@ -13,8 +13,6 @@ public:
    bool operator==(const Book& rhs) {
       return name == rhs.name;
    }
-private:
-
 };
 
 #endif

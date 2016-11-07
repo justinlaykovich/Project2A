@@ -6,8 +6,9 @@ public:
    string name;
    int waiting_time;
    int retaining_time;
+   bool has_book = false;
    operator int() {
-      return (waiting_time - retaining_time);
+      return waiting_time - (retaining_time + (has_book)?10000:0);
    }
    bool operator==(const Employee& rhs) {
       return name == rhs.name;

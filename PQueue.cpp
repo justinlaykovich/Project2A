@@ -88,16 +88,11 @@ void PriorityQueue<T>::invalidate(const int& index) {
 
 template<class T>
 void PriorityQueue<T>::invalidate(T& item) {
-   int index = -1;
    for(int i = 0; i < size; i++)
       if(data[i] == item) {
-         index = i;
+         data[i] = item;
+         swap(data[size-1],data[i]);
+         max_heapify();
          break;
       }
-
-   if(index == -1)
-      throw runtime_error("No such item in priority queue.");
-
-   swap(data[size-1],data[index]);
-   max_heapify();
 }

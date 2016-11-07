@@ -1,7 +1,7 @@
 #ifndef LIBRARY_H
 #define LIBRARY_H
 #include<string>
-#include<list>
+#include<vector>
 #include"Date.h"
 #include"PQueue.cpp"
 
@@ -18,9 +18,6 @@ struct Employee {
    bool operator==(const Employee& rhs) {
       return name == rhs.name;
    }
-   bool operator==(const string& rhs) {
-      return name == rhs;
-   }
    Employee(string new_name = "", int new_waiting_time = 0, int new_retaining_time = 0) {
       name = new_name;
       waiting_time = new_waiting_time;
@@ -35,9 +32,6 @@ struct Book {
    Employee current_employee;
    bool archived;
    PriorityQueue<Employee> waiting_list;
-   bool operator==(const string& rhs) {
-      return name == rhs;
-   }
    bool operator==(const Book& rhs) {
       return name == rhs.name;
    }
@@ -50,9 +44,11 @@ public:
    void circulate_book(const std::string&, Date);
    void pass_on(const std::string&, Date);
 private:
-   std::list<Employee> employees;
-   std::list<Book> books;
-   std::list<Book> archived_books;
+   std::vector<Employee> employees;
+   std::vector<Book> books;
+   std::vector<Book> archived_books;
+   int find_book(const string&,std::vector<Book>);
+   int find_employee(const string&);
 };
 
 #endif

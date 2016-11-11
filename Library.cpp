@@ -13,13 +13,13 @@ void Library::add_employee(const string& employee_name) {
 
    Employee new_employee = Employee(employee_name);
    employees.push_back(new_employee);
-   std::cout << "Added " << new_employee.name << " to employees." << std::endl;
 
    int size = books.size();
    #pragma omp parallel for
    for(int i = 0; i < size; i++)
       books[i].waiting_list.insert(new_employee);
 
+   std::cout << "Added " << new_employee.name << " to employees." << std::endl;
 }
 
 void Library::circulate_book(const string& book_name, Date date) {
@@ -30,23 +30,20 @@ void Library::circulate_book(const string& book_name, Date date) {
       throw runtime_error("No book found in archives: " + book_name);
 
    Book book = archived_books[index];
-   book.circulation_start_date = date;
-   book.circulation_last_date = date;
-   book.archived = false;
-   book.waiting_list = PriorityQueue<Employee>(employees);
+   book.circulate(date, employees);
 
-   Employee employee = book.waiting_list.extract_max();
-   employee.books_possessed += 1;
-   employees[find_employee(employee.name)] = employee;
+   Employee* employee = book.get_current_employee();
 
-   book.current_employee = employee;
+   employees[find_employee(employee->name)] = *employee;
 
-   update_employee(employee);
+   update_employee(*employee);
 
    books.push_back(book);
-   archived_books.erase(archived_books.begin() + index);
+   if(archived_books.size() == 1)
+      archived_books.pop_back();
+   else
+      archived_books.erase(archived_books.begin() + index);
 
-   std::cout << "Moved " << book.name << " from archives to circulation." << std::endl;
 }
 
 void Library::pass_on(const string& book_name, Date date) {
@@ -57,17 +54,15 @@ void Library::pass_on(const string& book_name, Date date) {
       throw runtime_error("No book found in circulation: " + book_name);
 
    Book *book = &(books[index]);
-   Employee employee = book->current_employee;
+   Employee employee = *(book->get_current_employee());
+
    employee.retaining_time += date - (book->circulation_last_date);
    employee.books_possessed -= 1;
    employees[find_employee(employee.name)] = employee;
 
-   if(book->waiting_list.is_empty()) {
-      std::cout << "Moved " << book->name << " to archive." << std::endl;
+   if(book->waiting_list_empty()) {
 
-      book->circulation_end_date = date;
-      book->circulation_last_date = date;
-      book->archived = true;
+      book->end_circulation(date);
 
       archived_books.push_back(*book);
 
@@ -75,26 +70,15 @@ void Library::pass_on(const string& book_name, Date date) {
          books.pop_back();
       else
          books.erase(books.begin() + index);
-
-      update_employee(employee);
    }
    else {
+      book->pass_book(date);
+      Employee* newEmployee = book.get_current_employee();
+      newEmployee->waiting_time += date - (book->circulation_start_date);
 
-      Employee newEmployee = book->waiting_list.extract_max();
-      newEmployee.waiting_time += date - (book->circulation_start_date);
-      newEmployee.books_possessed += 1;
-
-      book->current_employee = newEmployee;
-      book->circulation_last_date = date;
-
-      update_employee(newEmployee);
-
-      std::cout << "Moved " << book->name << " from " << employee.name << " to " << newEmployee.name << std::endl;
-      std::cout << newEmployee.name << " wait time: " << newEmployee.waiting_time << std::endl;
-      std::cout << employee.name << " retaining time: " << employee.retaining_time << std::endl;
+      update_employee(*newEmployee);
    }
    update_employee(employee);
-
 }
 
 int Library::find_book(const string& book_name, std::vector<Book> book_list) {
@@ -108,13 +92,13 @@ int Library::find_book(const string& book_name, std::vector<Book> book_list) {
          for(int i = 0; i < size/2; i++)
             if(index != -1)
                break;
-            else if(book_list[i].name == book_name)
+            else if(book_list[i].get_name() == book_name)
                index = i;
       #pragma omp section
          for(int j = size/2; j < size; j++)
             if(index != -1)
                break;
-            else if(book_list[j].name == book_name)
+            else if(book_list[j].get_name() == book_name)
                index = j;
    }
 
@@ -149,5 +133,5 @@ void Library::update_employee(const Employee& employee) {
    int size = books.size();
    #pragma omp parallel for
    for(int i = 0; i < size; i++)
-      books[i].waiting_list.invalidate(employee);
+      books[i].update(employee);
 }

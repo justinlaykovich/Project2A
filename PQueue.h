@@ -1,7 +1,9 @@
 #ifndef PQueue_H
 #define PQueue_H
 
+#include<stdexcept>
 #include<vector>
+#include"omp.h"
 
 template <class T>
 class PriorityQueue {
@@ -19,6 +21,7 @@ private:
    void max_heapify();
    void max_heapify(int i);
    void remove(const int& index);
+   int find(const T& item);
 };
 
 #endif

@@ -1,10 +1,4 @@
 #include"PQueue.h"
-#include<stdexcept>
-#include<algorithm>
-#include<iostream>
-
-using std::cout;
-using std::endl;
 
 template<class T>
 PriorityQueue<T>::PriorityQueue() {
@@ -85,11 +79,32 @@ bool PriorityQueue<T>::is_empty() {
 }
 
 template<class T>
+int PriorityQueue<T>::find(const T& item) {
+   int index = -1;
+   #pragma omp parallel sections
+   {
+      #pragma omp section
+         for(int i = 0; i < size/2; i++)
+            if(index != -1)
+               break;
+            else if(data[i] == item)
+               index = i;
+      #pragma omp section
+         for(int j = size/2; j < size; j++)
+            if(index != -1)
+               break;
+            else if(data[j] == item)
+               index = j;
+   }
+   return index;
+}
+
+template<class T>
 void PriorityQueue<T>::invalidate(const T& item) {
-   for(int i = 0; i < size; i++)
-      if(data[i] == item) {
-         remove(i);
-         insert(std::move(item));
-         break;
-      }
+   int index = find(item);
+   if(index == -1)
+      return;
+
+   remove(index);
+   insert(item);
 }

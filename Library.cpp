@@ -37,7 +37,7 @@ void Library::circulate_book(const string& book_name, Date date) {
    book.waiting_list = PriorityQueue<Employee>(employees);
 
    Employee employee = book.waiting_list.extract_max();
-   employee.has_book = true;
+   employee.books_possessed += 1;
    employees[find_employee(employee.name)] = employee;
 
    book.current_employee = employee;
@@ -62,7 +62,7 @@ void Library::pass_on(const string& book_name, Date date) {
    Book *book = &(books[index]);
    Employee employee = book->current_employee;
    employee.retaining_time += date - (book->circulation_last_date);
-   employee.has_book = false;
+   employee.books_possessed -= 1;
    employees[find_employee(employee.name)] = employee;
 
    if(book->waiting_list.is_empty()) {
@@ -88,7 +88,7 @@ void Library::pass_on(const string& book_name, Date date) {
 
       Employee newEmployee = book->waiting_list.extract_max();
       newEmployee.waiting_time += date - (book->circulation_start_date);
-      newEmployee.has_book = true;
+      newEmployee.books_possessed += 1;
 
       book->current_employee = newEmployee;
       book->circulation_last_date = date;

@@ -6,9 +6,9 @@ public:
    string name;
    int waiting_time;
    int retaining_time;
-   bool has_book = false;
+   unsigned int books_possessed = 0;
    operator int() {
-      return waiting_time - (retaining_time + (has_book)?10000:0);
+      return waiting_time - (retaining_time + books_possessed*1000);
    }
    bool operator==(const Employee& rhs) {
       return name == rhs.name;

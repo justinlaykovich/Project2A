@@ -3,10 +3,13 @@
 #include<string>
 #include<stdexcept>
 #include<vector>
+
 #include"Date.h"
 #include"PQueue.cpp"
 #include"Employee.h"
 #include"Book.h"
+
+#include"omp.h"
 
 class Library {
 public:
@@ -20,6 +23,7 @@ private:
    std::vector<Book> archived_books;
    int find_book(const string&,std::vector<Book>);
    int find_employee(const string&);
+   void update_employee(const Employee&);
 };
 
 #endif

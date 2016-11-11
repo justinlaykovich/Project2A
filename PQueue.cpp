@@ -16,14 +16,14 @@ PriorityQueue<T>::PriorityQueue(const std::vector<T>& inserted) {
 template<class T>
 void PriorityQueue<T>::insert(const T& item) {
    data.push_back(item);
-   size++;
 
-   for(int i = (size-1); i > 0; i = (i-1)/2)
-      if(!(data[(i-1)/2] > data[i])) {
-         std::swap(data[(i-1)/2],data[i]);
-      }
+   for(int i = size; i > 0; i = parent_of(i))
+      if(data[parent_of(i)] <= data[i])
+         std::swap(data[parent_of(i)],data[i]);
       else
          break;
+
+   size++;
 }
 
 template<class T>
@@ -33,53 +33,68 @@ void PriorityQueue<T>::max_heapify() {
 
 template<class T>
 void PriorityQueue<T>::max_heapify(int i) {
-   int left = 2*i + 1;
-   int right = 2*i + 2;
    int largest = i;
+   while(true) {
+      int left = left_child_of(i);
+      int right = right_child_of(i);
 
-   if ((left <= size) &&
-       (data[left] > data[largest]))
-       largest = left;
-   if ((right <= size) &&
-       (data[right] > data[largest]))
-       largest = right;
+      if(left >= size || right >= size)
+         break;
 
-   if (largest != i) {
-      std::swap(data[largest],data[i]);
-      max_heapify(largest);
+      if (data[left] > data[largest])
+          largest = left;
+      if (data[right] > data[largest])
+          largest = right;
+
+      if (largest != i) {
+         std::swap(data[largest],data[i]);
+         i = largest;
+      }
+      else
+         break;
    }
 }
 
 template<class T>
 T PriorityQueue<T>::extract_max() {
-   T item = data[0];
+   T item = top();
    remove(0);
    return item;
 }
 
 template<class T>
-T PriorityQueue<T>::top() {
+const T& PriorityQueue<T>::top() const {
+   if(size == 0)
+      throw runtime_error("No item in queue.");
+
    return data[0];
 }
 
 template<class T>
 void PriorityQueue<T>::remove(const int& index){
    if(index >= size || index < -1)
-      throw;
+      throw invalid_argument("Index out of bounds." );
 
-   data[index] = data[size-1];
-   data.pop_back();
    size--;
-   max_heapify(index);
+   if(size == 0) {
+      data.pop_back();
+      return;
+   }
+
+   data[index] = data[size];
+   data.pop_back();
+
+   if(size > 1)
+      max_heapify(index);
 }
 
 template<class T>
-bool PriorityQueue<T>::is_empty() {
+bool PriorityQueue<T>::is_empty() const {
    return size == 0;
 }
 
 template<class T>
-int PriorityQueue<T>::find(const T& item) {
+int PriorityQueue<T>::find(const T& item) const {
    int index = -1;
    #pragma omp parallel sections
    {
@@ -105,6 +120,11 @@ void PriorityQueue<T>::invalidate(const T& item) {
    if(index == -1)
       return;
 
-   remove(index);
-   insert(item);
+   for(data[index] = item; index > 0; index = parent_of(index))
+      if(data[parent_of(index)] < data[index])
+         std::swap(data[parent_of(index)],data[index]);
+      else
+         break;
+
+   max_heapify(index);
 }

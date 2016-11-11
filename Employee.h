@@ -7,10 +7,10 @@ public:
    int waiting_time;
    int retaining_time;
    unsigned int books_possessed = 0;
-   operator int() {
+   operator int() const {
       return waiting_time - (retaining_time + books_possessed*1000);
    }
-   bool operator==(const Employee& rhs) {
+   bool operator==(const Employee& rhs) const {
       return name == rhs.name;
    }
    Employee(string new_name = "") {

@@ -8,14 +8,6 @@ using std::vector;
 using std::string;
 
 int main() {
-   Employee sam("Sam",10,1);
-   Employee tom("Tom",1,10);
-
-   if(sam < tom)
-      cout << "Sam is less than tom." << endl;
-   else
-      cout << "Sam is not less than tom." << endl;
-
    Library library;
    library.add_book("Software Engineering");
    library.add_book("Chemistry");

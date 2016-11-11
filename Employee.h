@@ -13,10 +13,10 @@ public:
    bool operator==(const Employee& rhs) {
       return name == rhs.name;
    }
-   Employee(string new_name = "", int new_waiting_time = 0, int new_retaining_time = 0) {
+   Employee(string new_name = "") {
       name = new_name;
-      waiting_time = new_waiting_time;
-      new_retaining_time = new_retaining_time;
+      waiting_time = 0;
+      retaining_time = 0;
    }
 };
 

@@ -20,6 +20,7 @@ void Library::add_employee(const string& employee_name) {
    #pragma omp parallel for
    for(int i = 0; i < size; i++)
       books[i].waiting_list.insert(new_employee);
+
 }
 
 void Library::circulate_book(const string& book_name, Date date) {
@@ -63,9 +64,9 @@ void Library::pass_on(const string& book_name, Date date) {
    employee.retaining_time += date - (book->circulation_last_date);
    employee.books_possessed -= 1;
    employees[find_employee(employee.name)] = employee;
-   update_employee(employee);
 
    if(book->waiting_list.is_empty()) {
+      std::cout << "Moved " << book->name << " to archive." << std::endl;
 
       book->circulation_end_date = date;
       book->circulation_last_date = date;
@@ -73,14 +74,12 @@ void Library::pass_on(const string& book_name, Date date) {
 
       archived_books.push_back(*book);
 
-      int size= books.size();
-
       if(books.size() == 1)
          books.pop_back();
       else
          books.erase(books.begin() + index);
 
-      std::cout << "Moved " << book->name << " to archive." << std::endl;
+      update_employee(employee);
    }
    else {
 
@@ -97,9 +96,10 @@ void Library::pass_on(const string& book_name, Date date) {
 
       std::cout << "Moved " << book->name << " from " << employee.name << " to " << newEmployee.name << std::endl;
       std::cout << newEmployee.name << " wait time: " << newEmployee.waiting_time << std::endl;
+      std::cout << employee.name << " retaining time: " << employee.retaining_time << std::endl;
    }
+   update_employee(employee);
 
-   std::cout << employee.name << " retaining time: " << employee.retaining_time << std::endl;
 }
 
 int Library::find_book(const string& book_name, std::vector<Book> book_list) {
@@ -133,13 +133,13 @@ int Library::find_employee(const string& employee_name) {
 
    #pragma omp parallel sections
    {
-      #pragma parallel section
+      #pragma omp section
          for(int i = 0; i < size/2; i++)
             if(index != -1)
                break;
             else if(employees[i].name == employee_name)
                index = i;
-      #pragma parallel section
+      #pragma omp section
          for(int j = size/2; j < size; j++)
             if(index != -1)
                break;

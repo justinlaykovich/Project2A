@@ -1,6 +1,7 @@
 #ifndef _LIBRARY_H_
 #define _LIBRARY_H_
 #include<string>
+#include<stdexcept>
 #include<vector>
 #include"Date.h"
 #include"PQueue.cpp"

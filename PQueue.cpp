@@ -1,7 +1,7 @@
+#include"PQueue.h"
 #include<stdexcept>
 #include<algorithm>
 #include<iostream>
-#include"PQueue.h"
 
 using std::cout;
 using std::endl;
@@ -58,18 +58,13 @@ void PriorityQueue<T>::max_heapify(int i) {
 
 template<class T>
 T PriorityQueue<T>::extract_max() {
-   T item = top();
-   pop();
+   T item = data[0];
+   remove(0);
    return item;
 }
 
 template<class T>
-void PriorityQueue<T>::pop() {
-   remove(0);
-}
-
-template<class T>
-T PriorityQueue<T>::top() const {
+T PriorityQueue<T>::top() {
    return data[0];
 }
 
@@ -90,31 +85,11 @@ bool PriorityQueue<T>::is_empty() {
 }
 
 template<class T>
-int PriorityQueue<T>::index_of(const T& item) {
-   int index = -1;
-   #pragma omp parallel sections
-   {
-      #pragma omp section
-         for(int i = 0; i < size/2; i++)
-            if(index != -1)
-               break;
-            else if(data[i] == item)
-               index = i;
-      #pragma omp section
-         for(int j = size/2; j < size; j++)
-            if(index != -1)
-               break;
-            else if(data[j] == item)
-               index = j;
-   }
-   return index;
-}
-
-template<class T>
 void PriorityQueue<T>::invalidate(const T& item) {
-   int index = index_of(item);
-   if(index == -1)
-      return;
-   remove(index);
-   insert(item);
+   for(int i = 0; i < size; i++)
+      if(data[i] == item) {
+         remove(i);
+         insert(std::move(item));
+         break;
+      }
 }

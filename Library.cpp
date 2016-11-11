@@ -41,6 +41,8 @@ void Library::circulate_book(const string& book_name, Date date) {
 
    book.current_employee = employee;
 
+   int size = books.size();
+
    update_employee(employee);
 
    books.push_back(book);
@@ -71,6 +73,8 @@ void Library::pass_on(const string& book_name, Date date) {
 
       archived_books.push_back(*book);
 
+      int size= books.size();
+
       if(books.size() == 1)
          books.pop_back();
       else
@@ -86,6 +90,8 @@ void Library::pass_on(const string& book_name, Date date) {
 
       book->current_employee = newEmployee;
       book->circulation_last_date = date;
+
+      int size = books.size();
 
       update_employee(newEmployee);
 
@@ -127,13 +133,13 @@ int Library::find_employee(const string& employee_name) {
 
    #pragma omp parallel sections
    {
-      #pragma omp section
+      #pragma parallel section
          for(int i = 0; i < size/2; i++)
             if(index != -1)
                break;
             else if(employees[i].name == employee_name)
                index = i;
-      #pragma omp section
+      #pragma parallel section
          for(int j = size/2; j < size; j++)
             if(index != -1)
                break;

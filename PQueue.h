@@ -2,7 +2,6 @@
 #define PQueue_H
 
 #include<vector>
-#include"omp.h"
 
 template <class T>
 class PriorityQueue {
@@ -11,17 +10,15 @@ public:
    PriorityQueue(const std::vector<T>&);
    void insert(const T& item);
    void invalidate(const T&);
-   bool is_empty() const;
+   bool is_empty();
    T extract_max();
-   T top() const;
-   void pop();
+   T top();
 private:
    std::vector<T> data;
    int size;
    void max_heapify();
    void max_heapify(int i);
    void remove(const int& index);
-   int index_of(const T&) const;
 };
 
 #endif

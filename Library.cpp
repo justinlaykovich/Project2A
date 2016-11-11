@@ -30,16 +30,23 @@ void Library::circulate_book(const string& book_name, Date date) {
       throw runtime_error("No book found in archives: " + book_name);
 
    Book book = archived_books[index];
+   book.circulation_start_date = date;
+   book.circulation_last_date = date;
+   book.archived = false;
+   book.waiting_list = PriorityQueue<Employee>(employees);
 
-   Employee employee = book.circulate(date, employees);
+   Employee employee = book.waiting_list.extract_max();
+   employee.books_possessed += 1;
    employees[find_employee(employee.name)] = employee;
+
+   book.current_employee = employee;
 
    update_employee(employee);
 
    books.push_back(book);
    archived_books.erase(archived_books.begin() + index);
 
-   std::cout << "Moved " << book->get_name() << " from archives to circulation." << std::endl;
+   std::cout << "Moved " << book.name << " from archives to circulation." << std::endl;
 }
 
 void Library::pass_on(const string& book_name, Date date) {

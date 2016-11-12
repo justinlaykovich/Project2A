@@ -5,16 +5,29 @@
 #include<vector>
 #include"omp.h"
 
+/*
+   The custom PriorityQueue as specified by the project spec.
+   Not instantiated on any particular structure.
+   Implemented by max_heap.
+*/
+
 template <class T>
 class PriorityQueue {
 public:
    PriorityQueue();
    PriorityQueue(const std::vector<T>&);
    void insert(const T& item);
+   /*
+      Invalidate updates list by specifying that a value has been modified
+      and is no longer valid.
+      Effectively O(log n)
+   */
    void invalidate(const T&);
    bool is_empty() const;
+   /* Extract max, O(log n), is simply a top and pop combined. */
    T extract_max();
    const T& top() const;
+   void pop();
 private:
    std::vector<T> data;
    int size;

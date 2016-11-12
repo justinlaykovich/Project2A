@@ -21,7 +21,7 @@ public:
       return waiting_time - (retaining_time + books_possessed*1000);
    }
 
-   /* Allows comparison between Employee and String */
+   /* Compare Employee by name only */
    bool operator==(const Employee& rhs) const {
       return name == rhs.name;
    }

@@ -15,14 +15,14 @@ class Library {
 public:
    void add_employee(const std::string&);
    void add_book(const std::string&);
-   void circulate_book(const std::string&, Date);
-   void pass_on(const std::string&, Date);
+   void circulate_book(const std::string&, const Date&);
+   void pass_on(const std::string&, const Date&);
 private:
    std::vector<Employee> employees;
    std::vector<Book> books;
    std::vector<Book> archived_books;
-   int find_book(const string&,std::vector<Book>);
-   int find_employee(const string&);
+   int find_book(const string&,const std::vector<Book>&) const;
+   int find_employee(const string&) const;
    void update_employee(const Employee&);
 };
 

@@ -16,7 +16,7 @@ class PriorityQueue {
 public:
    PriorityQueue();
    PriorityQueue(const std::vector<T>&);
-   void insert(const T& item);
+   void insert(const T&);
    /*
       Invalidate updates list by specifying that a value has been modified
       and is no longer valid.
@@ -33,8 +33,8 @@ private:
    int size;
    void max_heapify();
    void max_heapify(int i);
-   void remove(const int& index);
-   int find(const T& item) const;
+   void remove(const int&);
+   int find(const T&) const;
    inline const int parent_of(int index) { return (index-1)/2; };
    inline const int left_child_of(int index) { return index*2+1; };
    inline const int right_child_of(int index) { return index*2+2; };

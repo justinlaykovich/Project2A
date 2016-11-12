@@ -28,7 +28,7 @@ void Library::add_employee(const string& employee_name) {
    std::cout << "Added " << new_employee.name << " to employees." << std::endl;
 }
 
-void Library::circulate_book(const string& book_name, Date date) {
+void Library::circulate_book(const string& book_name, const Date& date) {
 
    int index = find_book(book_name,archived_books);
 
@@ -70,7 +70,7 @@ void Library::circulate_book(const string& book_name, Date date) {
    std::cout << "Moved " << book.name << " from archives to circulation." << std::endl;
 }
 
-void Library::pass_on(const string& book_name, Date date) {
+void Library::pass_on(const string& book_name, const Date& date) {
 
    int index = find_book(book_name, books);
 
@@ -136,7 +136,7 @@ void Library::pass_on(const string& book_name, Date date) {
    std::cout << employee.name << " retaining time: " << employee.retaining_time << std::endl;
 }
 
-int Library::find_book(const string& book_name, std::vector<Book> book_list) {
+int Library::find_book(const string& book_name, const std::vector<Book>& book_list) const {
 
    int size = book_list.size();
    int index = -1;
@@ -170,7 +170,7 @@ int Library::find_book(const string& book_name, std::vector<Book> book_list) {
    return index;
 }
 
-int Library::find_employee(const string& employee_name) {
+int Library::find_employee(const string& employee_name) const {
 
    int size = employees.size();
    int index = -1;

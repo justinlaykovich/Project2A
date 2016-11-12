@@ -16,7 +16,7 @@ public:
    PriorityQueue<Employee> waiting_list;
 
    /* Allows for compare betwen Book and String */
-   bool operator==(const Book& rhs) {
+   bool operator==(const Book& rhs) const {
       return name == rhs.name;
    }
 };

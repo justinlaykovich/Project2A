@@ -6,6 +6,8 @@ public:
    Employee(const string&);
    const string& get_name() const;
    string name;
+   void take_book(const int&);
+   void give_book(const int&);
    int waiting_time;
    int retaining_time;
    unsigned int books_possessed;
@@ -38,6 +40,16 @@ Employee::Employee(const string& name = "") {
 
 const string& Employee::get_name() const {
    return name;
+}
+
+void Employee::give_book(const int& waiting_time) {
+   books_possessed += 1;
+   this->waiting_time += waiting_time;
+}
+
+void Employee::take_book(const int& retaining_time) {
+   books_possessed -= 1;
+   this->retaining_time += retaining_time;
 }
 
 #endif

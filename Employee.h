@@ -5,8 +5,6 @@ class Employee {
 public:
    Employee(const string&);
    const string& get_name() const;
-   void receive_book(const int&);
-   void pass_on(const int&);
    string name;
    int waiting_time;
    int retaining_time;
@@ -40,16 +38,6 @@ Employee::Employee(const string& name = "") {
 
 const string& Employee::get_name() const {
    return name;
-}
-
-void Employee::receive_book(const int& waiting_time) {
-   books_possessed += 1;
-   this->waiting_time += waiting_time;
-}
-
-void Employee::pass_on(const int& retaining_time) {
-   books_possessed -= 1;
-   this->retaining_time += retaining_time;
 }
 
 #endif

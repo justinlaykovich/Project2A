@@ -8,7 +8,6 @@ public:
    Employee* pass_on(Date);
    Employee* get_current_employee();
    const Date& get_last_date() const;
-   const Date& get_start_date() const;
    const string& get_name() const;
    void update(const Employee&);
    void add(const Employee&);

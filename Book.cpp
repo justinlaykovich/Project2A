@@ -12,27 +12,22 @@ const Date& Book::get_last_date() const {
    return circulation_last_date;
 }
 
-const Date& Book::get_start_date() const {
-   return circulation_start_date;
-}
-
 Employee* Book::circulate(Date date,std::vector<Employee> employees) {
-   if(employees.size() == 0)
-      throw runtime_error("No employees to circulate to.");
-
    circulation_start_date = date;
    circulation_last_date = date;
    archived = false;
    waiting_list = PriorityQueue<Employee>(employees);
    current_employee = waiting_list.extract_max();
+   current_employee.books_possessed += 1;
    return get_current_employee();
 }
 
 Employee* Book::pass_on(Date date) {
-   circulation_last_date = date;
-
    if(!waiting_list.is_empty()) {
+      circulation_last_date = date;
       current_employee = waiting_list.extract_max();
+      current_employee.waiting_time += date - circulation_start_date;
+      current_employee.books_possessed += 1;
       return &current_employee;
    }
 

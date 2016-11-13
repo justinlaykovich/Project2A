@@ -17,7 +17,7 @@ public:
       so that a person who holds a book already is not prioritized to get it
       again, but they can if everyone else is holding a book.
    */
-   operator int() const {
+   operator int() {
       return waiting_time - (retaining_time + books_possessed*1000);
    }
 

@@ -45,7 +45,7 @@ void PriorityQueue<T>::max_heapify(int i) {
 
    /*
       This is the abstracted max_heapify referred to in the MIT 6.004 Lecture Series.
-      series and put in a non-abstracted way in this CS class.
+      series and put in a non-abstracted way in this CS303.
    */
 
    while(true) {
@@ -79,6 +79,8 @@ T PriorityQueue<T>::extract_max() {
 
 template<class T>
 const T& PriorityQueue<T>::top() const {
+   /* Constant time, O(1) */
+
    if(size == 0)
       throw runtime_error("No item in queue.");
 

@@ -3,8 +3,6 @@
 
 class Book {
 public:
-   Employee* start_circulation(Date, std::vector<Employee>);
-   Employee* pass_on(Date);
    string name;
    Date circulation_start_date;
    Date circulation_end_date;

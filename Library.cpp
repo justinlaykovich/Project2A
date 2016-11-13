@@ -30,7 +30,7 @@ void Library::add_employee(const string& employee_name) {
 
 void Library::circulate_book(const string& book_name, const Date& date) {
 
-   int index = find_book(book_name,archived_books);
+   int index = find(book_name,archived_books);
 
    if(index == -1)
       throw runtime_error("No book found in archives: " + book_name);
@@ -50,7 +50,7 @@ void Library::circulate_book(const string& book_name, const Date& date) {
 
    Employee employee = book.waiting_list.extract_max();
    employee.books_possessed += 1;
-   employees[find_employee(employee.name)] = employee;
+   employees[find(employee.name,employees)] = employee;
 
    book.current_employee = employee;
 
@@ -72,7 +72,7 @@ void Library::circulate_book(const string& book_name, const Date& date) {
 
 void Library::pass_on(const string& book_name, const Date& date) {
 
-   int index = find_book(book_name, books);
+   int index = find(book_name, books);
 
    if(index == -1)
       throw runtime_error("No book found in circulation: " + book_name);
@@ -87,7 +87,7 @@ void Library::pass_on(const string& book_name, const Date& date) {
    employee.books_possessed -= 1;
 
    /* Modifies employee in Employee list */
-   employees[find_employee(employee.name)] = employee;
+   employees[find(employee.name,employees)] = employee;
 
    if(book->waiting_list.is_empty()) {
       std::cout << "Moved " << book->name << " to archive." << std::endl;
@@ -136,9 +136,10 @@ void Library::pass_on(const string& book_name, const Date& date) {
    std::cout << employee.name << " retaining time: " << employee.retaining_time << std::endl;
 }
 
-int Library::find_book(const string& book_name, const std::vector<Book>& book_list) const {
+template<typename T>
+int Library::find(const string& name, const std::vector<T>& list) const {
 
-   int size = book_list.size();
+   int size = list.size();
    int index = -1;
 
    /*
@@ -152,47 +153,13 @@ int Library::find_book(const string& book_name, const std::vector<Book>& book_li
          for(int i = 0; i < size/2; i++)
             if(index != -1)
                break;
-            else if(book_list[i].name == book_name)
+            else if(list[i].name == name)
                index = i;
       #pragma omp section
          for(int j = size/2; j < size; j++)
             if(index != -1)
                break;
-            else if(book_list[j].name == book_name)
-               index = j;
-   }
-
-   /*
-      Will return index or -1 if not found.
-      Not found is valid.
-   */
-
-   return index;
-}
-
-int Library::find_employee(const string& employee_name) const {
-
-   int size = employees.size();
-   int index = -1;
-
-   /*
-      Find can be parallelized without disrupting anything.
-      Splits into two threads.
-   */
-
-   #pragma omp parallel sections num_threads(2)
-   {
-      #pragma omp section
-         for(int i = 0; i < size/2; i++)
-            if(index != -1)
-               break;
-            else if(employees[i].name == employee_name)
-               index = i;
-      #pragma omp section
-         for(int j = size/2; j < size; j++)
-            if(index != -1)
-               break;
-            else if(employees[j].name == employee_name)
+            else if(list[j].name == name)
                index = j;
    }
 

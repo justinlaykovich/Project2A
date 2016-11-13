@@ -21,8 +21,8 @@ private:
    std::vector<Employee> employees;
    std::vector<Book> books;
    std::vector<Book> archived_books;
-   int find_book(const string&,const std::vector<Book>&) const;
-   int find_employee(const string&) const;
+   template<typename T>
+   int find(const string&,const std::vector<T>&) const;
    void update_employee(const Employee&);
 };
 

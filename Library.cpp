@@ -45,7 +45,6 @@ void Library::circulate_book(const string& book_name, const Date& date) {
 
    Employee* employee = book.circulate(date,employees);
    employees[find(employee->name,employees)] = *employee;
-   employee->give_book(0);
 
    /*
       Updates with new values - adding book count changes priority.
@@ -74,7 +73,8 @@ void Library::pass_on(const string& book_name, const Date& date) {
    Book *book = &(books[index]);
    /* Grab the current employee */
    Employee employee = *(book->get_current_employee());
-   employee.take_book(date - book->get_last_date());
+   employee.retaining_time += date - book->get_last_date();
+   employee.books_possessed -= 1;
 
    /* Modifies employee in Employee list */
    employees[find(employee.name,employees)] = employee;
@@ -100,7 +100,6 @@ void Library::pass_on(const string& book_name, const Date& date) {
          And the priorities are updated in books
          Updates are mlog(n) on m, book_list and n, waiting_list.
       */
-      newEmployee->give_book(date - book->get_start_date());
 
       update_employee(*newEmployee);
       update_employee(employee);

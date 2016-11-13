@@ -29,7 +29,7 @@ public:
    }
 };
 
-Employee::Employee(const string& name) {
+Employee::Employee(const string& name = "") {
    this->name = name;
    waiting_time = 0;
    retaining_time = 0;

@@ -22,7 +22,7 @@ void Library::add_employee(const string& employee_name) {
 
    #pragma omp parallel for num_threads(4)
    for(int i = 0; i < size; i++)
-      books[i].add_employee(new_employee);
+      books[i].waiting_list.insert(new_employee);
 
    std::cout << "Added " << new_employee.name << " to employees." << std::endl;
 }
@@ -72,12 +72,12 @@ void Library::pass_on(const string& book_name, const Date& date) {
    /* Grab book */
    Book *book = &(books[index]);
    /* Grab the current employee */
-   Employee employee = *(book->get_current_employee());
+   Employee employee = book->pass_on(date);
 
    /* Modifies employee in Employee list */
    employees[find(employee.name,employees)] = employee;
 
-   if(!book->has_waiting()) {
+   if(book->archived) {
       std::cout << "Moved " << book->get_name() << " to archive." << std::endl;
 
       /* And book added to archive */
@@ -97,7 +97,7 @@ void Library::pass_on(const string& book_name, const Date& date) {
          extract_max() is log(n) on employees in waiting_list
       */
 
-      Employee newEmployee = *(book->pass_on(date));
+      Employee& newEmployee = *(book->get_current_employee());
 
       /*
          And the priorities are updated in books

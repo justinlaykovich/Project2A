@@ -41,18 +41,11 @@ void Library::circulate_book(const string& book_name, const Date& date) {
    */
 
    Book book = archived_books[index];
-   book.circulation_start_date = date;
-   book.circulation_last_date = date;
-   book.archived = false;
-   book.waiting_list = PriorityQueue<Employee>(employees);
 
    /* Sends to the first employee. extract_max() is log(n) on employees list */
 
-   Employee employee = book.waiting_list.extract_max();
-   employee.books_possessed += 1;
-   employees[find(employee.name,employees)] = employee;
-
-   book.current_employee = employee;
+   Employee* employee = book.start_circulation(date, employees);
+   employees[find(employee->name,employees)] = *employee;
 
    /*
       Updates with new values - adding book count changes priority.
@@ -60,7 +53,7 @@ void Library::circulate_book(const string& book_name, const Date& date) {
       an employee already has a book or not
    */
 
-   update_employee(employee);
+   update_employee(*employee);
 
    books.push_back(book);
 

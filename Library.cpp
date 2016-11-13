@@ -3,14 +3,15 @@
 
 void Library::add_book(const string& book_name) {
    /* Adds book to archives */
-   Book book(book_name);
+   Book book;
+   book.name = book_name;
    archived_books.push_back(book);
-   std::cout << "Added " << book.get_name() << " to archived books." << std::endl;
+   std::cout << "Added " << book.name << " to archived books." << std::endl;
 }
 
 void Library::add_employee(const string& employee_name) {
    /* Adds new employee to employee list */
-   Employee new_employee(employee_name);
+   Employee new_employee = Employee(employee_name);
    employees.push_back(new_employee);
 
    /*
@@ -40,11 +41,18 @@ void Library::circulate_book(const string& book_name, const Date& date) {
    */
 
    Book book = archived_books[index];
+   book.circulation_start_date = date;
+   book.circulation_last_date = date;
+   book.archived = false;
+   book.waiting_list = PriorityQueue<Employee>(employees);
 
    /* Sends to the first employee. extract_max() is log(n) on employees list */
 
-   Employee* employee = book.circulate(date,employees);
-   employees[find(employee->name,employees)] = *employee;
+   Employee employee = book.waiting_list.extract_max();
+   employee.books_possessed += 1;
+   employees[find(employee.name,employees)] = employee;
+
+   book.current_employee = employee;
 
    /*
       Updates with new values - adding book count changes priority.
@@ -52,14 +60,14 @@ void Library::circulate_book(const string& book_name, const Date& date) {
       an employee already has a book or not
    */
 
-   update_employee(*employee);
+   update_employee(employee);
 
    books.push_back(book);
 
    /* Remove the book from the archives */
    archived_books.erase(archived_books.begin() + index);
 
-   std::cout << "Moved " << book.get_name() << " from archives to circulation." << std::endl;
+   std::cout << "Moved " << book.name << " from archives to circulation." << std::endl;
 }
 
 void Library::pass_on(const string& book_name, const Date& date) {
@@ -72,15 +80,24 @@ void Library::pass_on(const string& book_name, const Date& date) {
    /* Grab book */
    Book *book = &(books[index]);
    /* Grab the current employee */
-   Employee employee = book->pass_on(date);
+   Employee employee = book->current_employee;
+
+   /* Adjust employee properties */
+   employee.retaining_time += date - (book->circulation_last_date);
+   employee.books_possessed -= 1;
 
    /* Modifies employee in Employee list */
    employees[find(employee.name,employees)] = employee;
 
-   if(book->archived) {
-      std::cout << "Moved " << book->get_name() << " to archive." << std::endl;
+   if(book->waiting_list.is_empty()) {
+      std::cout << "Moved " << book->name << " to archive." << std::endl;
+
+      /* No more in waiting list... End_date is set */
+      book->circulation_end_date = date;
+      book->circulation_last_date = date;
 
       /* And book added to archive */
+      book->archived = true;
       archived_books.push_back(*book);
 
       if(books.size() == 1)
@@ -97,7 +114,13 @@ void Library::pass_on(const string& book_name, const Date& date) {
          extract_max() is log(n) on employees in waiting_list
       */
 
-      Employee& newEmployee = *(book->get_current_employee());
+      Employee newEmployee = book->waiting_list.extract_max();
+      newEmployee.waiting_time += date - (book->circulation_start_date);
+      newEmployee.books_possessed += 1;
+
+      /* And the book iteself is adjusted to reflect this */
+      book->current_employee = newEmployee;
+      book->circulation_last_date = date;
 
       /*
          And the priorities are updated in books
@@ -107,7 +130,7 @@ void Library::pass_on(const string& book_name, const Date& date) {
       update_employee(newEmployee);
       update_employee(employee);
 
-      std::cout << "Moved " << book->get_name() << " from " << employee.name << " to " << newEmployee.name << std::endl;
+      std::cout << "Moved " << book->name << " from " << employee.name << " to " << newEmployee.name << std::endl;
       std::cout << newEmployee.name << " wait time: " << newEmployee.waiting_time << std::endl;
    }
    std::cout << employee.name << " retaining time: " << employee.retaining_time << std::endl;

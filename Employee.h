@@ -3,10 +3,12 @@
 
 class Employee {
 public:
+   Employee(const string&);
+   const string& get_name() const;
    string name;
    int waiting_time;
    int retaining_time;
-   unsigned int books_possessed = 0;
+   unsigned int books_possessed;
 
    /*
       Rather than overloading comparison operators, this
@@ -25,13 +27,17 @@ public:
    bool operator==(const Employee& rhs) const {
       return name == rhs.name;
    }
-
-   /* Constructor for Employee */
-   Employee(string new_name = "") {
-      name = new_name;
-      waiting_time = 0;
-      retaining_time = 0;
-   }
 };
+
+Employee::Employee(const string& name) {
+   this->name = name;
+   waiting_time = 0;
+   retaining_time = 0;
+   books_possessed = 0;
+}
+
+const string& Employee::get_name() const {
+   return name;
+}
 
 #endif

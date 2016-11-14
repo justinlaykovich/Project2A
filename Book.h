@@ -29,7 +29,7 @@ private:
 
    /* Keeps track of employee currently holding book */
    Employee current_employee;
-   bool archived = true;
+   bool archived;
    PriorityQueue<Employee,CompareEmployee> waiting_list;
 };
 

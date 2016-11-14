@@ -18,11 +18,11 @@ public:
    PriorityQueue(const std::vector<T>&);
    void insert(const T&);
    /*
-      Invalidate updates list by specifying that a value has been modified
+      update updates list by specifying that a value has been modified
       and is no longer valid.
       Effectively O(log n)
    */
-   void invalidate(const T&);
+   void update(const T&);
    bool is_empty() const;
    /* Extract max, O(log n), is simply a top and pop combined. */
    T extract_max();

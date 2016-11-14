@@ -153,7 +153,7 @@ int PriorityQueue<T,Compare>::find(const T& item) const {
 }
 
 template<class T, class Compare>
-void PriorityQueue<T,Compare>::invalidate(const T& item) {
+void PriorityQueue<T,Compare>::update(const T& item) {
    int index = find(item);
    /* Don't throw error if item not in list -- just return */
    if(index == -1)

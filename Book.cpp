@@ -2,6 +2,7 @@
 
 Book::Book(const string& name) {
    this->name = name;
+   archived = true;
 }
 
 const string& Book::get_name() const {
@@ -38,16 +39,22 @@ Employee* Book::circulate(Date date,std::vector<Employee> employees) {
    if(employees.size() == 0)
       throw runtime_error("No employees to circulate to.");
 
+   /* Sets all the circulation parameters */
+
    circulation_start_date = date;
    circulation_last_date = date;
    archived = false;
+
+   /* Fills the waiting list */
    waiting_list = PriorityQueue<Employee,CompareEmployee>(employees);
+
+   /* Grab first employee */
    current_employee = waiting_list.extract_max();
    return get_current_employee();
 }
 
 void Book::update(const Employee& employee) {
-   waiting_list.invalidate(employee);
+   waiting_list.update(employee);
 }
 
 void Book::add(const Employee& employee) {

@@ -2,6 +2,7 @@
 #include<iostream>
 
 void Library::add_book(const string& book_name) {
+
    /* Adds book to archives */
    Book book(book_name);
    archived_books.push_back(book);
@@ -42,17 +43,14 @@ void Library::circulate_book(const string& book_name, const Date& date) {
    Book book = archived_books[index];
 
    /* Sends to the first employee. */
-
    Employee* employee = book.circulate(date,employees);
    employee->receive_book(0);
 
    /* Updates with new values - adding book count changes priority. */
-
    employees[find(employee->get_name(),employees)] = *employee;
    update_employee(*employee);
 
    /* Move the book from the archives to circulation. */
-
    books.push_back(book);
    archived_books.erase(archived_books.begin() + index);
    std::cout << "Moved " << book.get_name() << " from archives to circulation." << std::endl;
@@ -69,12 +67,10 @@ void Library::pass_on(const string& book_name, const Date& date) {
    Book *book = &(books[index]);
 
    /* Grab the current employee */
-
    Employee employee = *(book->get_current_employee());
    employee.pass_on(date - book->get_last_date());
 
    /* Modifies employee in Employee list */
-
    employees[find(employee.get_name(),employees)] = employee;
 
    /* Gets next employee or NULL if non exist */
@@ -86,15 +82,16 @@ void Library::pass_on(const string& book_name, const Date& date) {
       archived_books.push_back(*book);
       std::cout << "Moved " << book->get_name() << " to archive." << std::endl;
 
+      /* Unnecessary to adjust values if no more books */
       if(books.size() == 1)
          books.pop_back();
       else {
-         /* Unnecessary to adjust values if no more books */
          books.erase(books.begin() + index);
          update_employee(employee);
       }
    }
    else {
+
       /*
          And the priorities are updated in books
          Updates are mlog(n) on m, book_list and n, waiting_list.

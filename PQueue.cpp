@@ -2,18 +2,20 @@
 
 template<class T, class Compare>
 PriorityQueue<T,Compare>::PriorityQueue() {
+
    size = 0;
 }
 
 template<class T, class Compare>
 PriorityQueue<T,Compare>::PriorityQueue(const std::vector<T>& inserted) {
-   size = 0;
 
    /*
       Each insert is log(n) individually.
       Results in nlog(n).
       Cannot be parallelized -- interdependent.
    */
+
+   size = 0;
 
    int insertSize = inserted.size();
    for(int i = 0; i < insertSize; i++)
@@ -22,6 +24,12 @@ PriorityQueue<T,Compare>::PriorityQueue(const std::vector<T>& inserted) {
 
 template<class T, class Compare>
 void PriorityQueue<T,Compare>::insert(const T& item) {
+
+   /*
+      The expected behaviour here is that the last item is at the top,
+      all things being equal. All things not equal, highest priority at top.
+   */
+
    data.push_back(item);
 
    /* log(n) insert */
@@ -41,12 +49,15 @@ void PriorityQueue<T,Compare>::max_heapify() {
 
 template<class T, class Compare>
 void PriorityQueue<T,Compare>::max_heapify(int i) {
-   int largest = i;
 
    /*
-      This is the abstracted max_heapify referred to in the MIT 6.004 Lecture Series.
-      series and put in a non-abstracted way in this CS303.
+      This is the abstracted, recursive max_heapify referred to in the MIT 6.004 Lecture Series
+      series and put in a non-abstracted, non-recursive way in this CS303.
+
+      Here it is abstracted and non-recursive, for lower overhead. Pretty much the same.
    */
+
+   int largest = i;
 
    while(true) {
       int left = left_child_of(i);
@@ -71,6 +82,7 @@ void PriorityQueue<T,Compare>::max_heapify(int i) {
 
 template<class T,class Compare>
 T PriorityQueue<T,Compare>::extract_max() {
+
    /* pop is log(n) and so the function in total is log(n) */
    T item = top();
    pop();
@@ -79,6 +91,7 @@ T PriorityQueue<T,Compare>::extract_max() {
 
 template<class T,class Compare>
 const T& PriorityQueue<T,Compare>::top() const {
+
    /* Constant time, O(1) */
 
    if(size == 0)
@@ -126,6 +139,7 @@ bool PriorityQueue<T,Compare>::is_empty() const {
 template<class T, class Compare>
 int PriorityQueue<T,Compare>::find(const T& item) const {
    int index = -1;
+
    /*
       Find can be parallelized, and it's good to do so
       when searching for items based on things orthogonal to
@@ -133,6 +147,7 @@ int PriorityQueue<T,Compare>::find(const T& item) const {
 
       Two threads. Otherwise linear.
    */
+
    #pragma omp parallel sections
    {
       #pragma omp section
@@ -148,13 +163,16 @@ int PriorityQueue<T,Compare>::find(const T& item) const {
             else if(data[j] == item)
                index = j;
    }
+
    /* -1 is a valid value. */
    return index;
 }
 
 template<class T, class Compare>
 void PriorityQueue<T,Compare>::update(const T& item) {
+
    int index = find(item);
+
    /* Don't throw error if item not in list -- just return */
    if(index == -1)
       return;

@@ -74,6 +74,7 @@ void Library::pass_on(const string& book_name, const Date& date) {
    employee.pass_on(date - book->get_last_date());
 
    /* Modifies employee in Employee list */
+
    employees[find(employee.get_name(),employees)] = employee;
 
    /* Gets next employee or NULL if non exist */
@@ -107,6 +108,7 @@ void Library::pass_on(const string& book_name, const Date& date) {
       std::cout << "Moved " << book->get_name() << " from " << employee.get_name() << " to " << newEmployee->get_name() << std::endl;
       std::cout << newEmployee->get_name() << " wait time: " << newEmployee->get_waiting_time() << std::endl;
    }
+
    std::cout << employee.get_name() << " retaining time: " << employee.get_retaining_time() << std::endl;
 }
 

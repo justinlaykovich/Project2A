@@ -55,6 +55,9 @@ Employee* Book::circulate(Date date,std::vector<Employee> employees) {
 
 void Book::update(const Employee& employee) {
    waiting_list.update(employee);
+   if(employee == current_employee) {
+      current_employee = employee;
+   }
 }
 
 void Book::add(const Employee& employee) {

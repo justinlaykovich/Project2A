@@ -9,6 +9,7 @@ void Library::add_book(const string& book_name) {
 }
 
 void Library::add_employee(const string& employee_name) {
+
    /* Adds new employee to employee list */
    Employee new_employee(employee_name);
    employees.push_back(new_employee);
@@ -19,7 +20,6 @@ void Library::add_employee(const string& employee_name) {
    */
 
    int size = books.size();
-
    #pragma omp parallel for num_threads(4)
    for(int i = 0; i < size; i++)
       books[i].add(new_employee);
@@ -41,26 +41,21 @@ void Library::circulate_book(const string& book_name, const Date& date) {
 
    Book book = archived_books[index];
 
-   /* Sends to the first employee. extract_max() is log(n) on employees list */
+   /* Sends to the first employee. */
 
    Employee* employee = book.circulate(date,employees);
    employee->receive_book(0);
 
    employees[find(employee->get_name(),employees)] = *employee;
 
-   /*
-      Updates with new values - adding book count changes priority.
-      this allows one to circulate multiple books adjusted for whether
-      an employee already has a book or not
-   */
+   /* Updates with new values - adding book count changes priority. */
 
    update_employee(*employee);
 
+   /* Move the book from the archives to circulation. */
+
    books.push_back(book);
-
-   /* Remove the book from the archives */
    archived_books.erase(archived_books.begin() + index);
-
    std::cout << "Moved " << book.get_name() << " from archives to circulation." << std::endl;
 }
 
@@ -73,6 +68,7 @@ void Library::pass_on(const string& book_name, const Date& date) {
 
    /* Grab book */
    Book *book = &(books[index]);
+
    /* Grab the current employee */
    Employee employee = *(book->get_current_employee());
    employee.pass_on(date - book->get_last_date());
@@ -80,13 +76,14 @@ void Library::pass_on(const string& book_name, const Date& date) {
    /* Modifies employee in Employee list */
    employees[find(employee.get_name(),employees)] = employee;
 
+   /* Gets next employee or NULL if non exist */
    Employee* newEmployee = book->get_next_employee(date);
 
    if(newEmployee == NULL) {
-      std::cout << "Moved " << book->get_name() << " to archive." << std::endl;
 
       /* And book added to archive */
       archived_books.push_back(*book);
+      std::cout << "Moved " << book->get_name() << " to archive." << std::endl;
 
       if(books.size() == 1)
          books.pop_back();

@@ -31,6 +31,7 @@ private:
    unsigned int books_possessed;
 };
 
+/* Compare class for PriorityQueue */
 class CompareEmployee {
 public:
    bool operator () (const Employee& lhs, const Employee& rhs) const {

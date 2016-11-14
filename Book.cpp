@@ -16,16 +16,8 @@ const Date& Book::get_start_date() const {
    return circulation_start_date;
 }
 
-Employee* Book::circulate(Date date,std::vector<Employee> employees) {
-   if(employees.size() == 0)
-      throw runtime_error("No employees to circulate to.");
-
-   circulation_start_date = date;
-   circulation_last_date = date;
-   archived = false;
-   waiting_list = PriorityQueue<Employee,CompareEmployee>(employees);
-   current_employee = waiting_list.extract_max();
-   return get_current_employee();
+Employee* Book::get_current_employee() {
+   return &(current_employee);
 }
 
 Employee* Book::get_next_employee(Date date) {
@@ -42,8 +34,16 @@ Employee* Book::get_next_employee(Date date) {
    return NULL;
 }
 
-Employee* Book::get_current_employee() {
-   return &(current_employee);
+Employee* Book::circulate(Date date,std::vector<Employee> employees) {
+   if(employees.size() == 0)
+      throw runtime_error("No employees to circulate to.");
+
+   circulation_start_date = date;
+   circulation_last_date = date;
+   archived = false;
+   waiting_list = PriorityQueue<Employee,CompareEmployee>(employees);
+   current_employee = waiting_list.extract_max();
+   return get_current_employee();
 }
 
 void Book::update(const Employee& employee) {

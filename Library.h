@@ -22,9 +22,11 @@ private:
    std::vector<Employee> employees;
    std::vector<Book> books;
    std::vector<Book> archived_books;
+
+   void update_employee(const Employee&);
+
    template<typename T>
    int find(const string&,const std::vector<T>&) const;
-   void update_employee(const Employee&);
 };
 
 #endif

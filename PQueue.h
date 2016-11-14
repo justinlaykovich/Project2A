@@ -11,7 +11,7 @@
    Implemented by max_heap.
 */
 
-template <class T>
+template <class T, class Compare>
 class PriorityQueue {
 public:
    PriorityQueue();
@@ -38,6 +38,7 @@ private:
    inline const int parent_of(int index) { return (index-1)/2; };
    inline const int left_child_of(int index) { return index*2+1; };
    inline const int right_child_of(int index) { return index*2+2; };
+   Compare compare;
 };
 
 #endif

@@ -1,12 +1,12 @@
 #include"PQueue.h"
 
-template<class T>
-PriorityQueue<T>::PriorityQueue() {
+template<class T, class Compare>
+PriorityQueue<T,Compare>::PriorityQueue() {
    size = 0;
 }
 
-template<class T>
-PriorityQueue<T>::PriorityQueue(const std::vector<T>& inserted) {
+template<class T, class Compare>
+PriorityQueue<T,Compare>::PriorityQueue(const std::vector<T>& inserted) {
    size = 0;
 
    /*
@@ -20,13 +20,13 @@ PriorityQueue<T>::PriorityQueue(const std::vector<T>& inserted) {
       insert(inserted[i]);
 }
 
-template<class T>
-void PriorityQueue<T>::insert(const T& item) {
+template<class T, class Compare>
+void PriorityQueue<T,Compare>::insert(const T& item) {
    data.push_back(item);
 
    /* log(n) insert */
    for(int i = size; i > 0; i = parent_of(i))
-      if(data[parent_of(i)] <= data[i])
+      if(!compare(data[parent_of(i)],data[i]))
          std::swap(data[parent_of(i)],data[i]);
       else
          break;
@@ -34,13 +34,13 @@ void PriorityQueue<T>::insert(const T& item) {
    size++;
 }
 
-template<class T>
-void PriorityQueue<T>::max_heapify() {
+template<class T, class Compare>
+void PriorityQueue<T,Compare>::max_heapify() {
    max_heapify(0);
 }
 
-template<class T>
-void PriorityQueue<T>::max_heapify(int i) {
+template<class T, class Compare>
+void PriorityQueue<T,Compare>::max_heapify(int i) {
    int largest = i;
 
    /*
@@ -55,9 +55,9 @@ void PriorityQueue<T>::max_heapify(int i) {
       if(left >= size || right >= size)
          break;
 
-      if (data[left] > data[largest])
+      if (compare(data[left],data[largest]))
           largest = left;
-      if (data[right] > data[largest])
+      if (compare(data[right],data[largest]))
           largest = right;
 
       if (largest != i) {
@@ -69,16 +69,16 @@ void PriorityQueue<T>::max_heapify(int i) {
    }
 }
 
-template<class T>
-T PriorityQueue<T>::extract_max() {
+template<class T,class Compare>
+T PriorityQueue<T,Compare>::extract_max() {
    /* pop is log(n) and so the function in total is log(n) */
    T item = top();
    pop();
    return item;
 }
 
-template<class T>
-const T& PriorityQueue<T>::top() const {
+template<class T,class Compare>
+const T& PriorityQueue<T,Compare>::top() const {
    /* Constant time, O(1) */
 
    if(size == 0)
@@ -87,8 +87,8 @@ const T& PriorityQueue<T>::top() const {
    return data[0];
 }
 
-template<class T>
-void PriorityQueue<T>::pop() {
+template<class T,class Compare>
+void PriorityQueue<T,Compare>::pop() {
    if(size == 0)
       throw runtime_error("No item in queue.");
 
@@ -96,8 +96,8 @@ void PriorityQueue<T>::pop() {
    remove(0);
 }
 
-template<class T>
-void PriorityQueue<T>::remove(const int& index){
+template<class T, class Compare>
+void PriorityQueue<T,Compare>::remove(const int& index){
    if(index >= size || index < -1)
       throw invalid_argument("Index out of bounds." );
 
@@ -118,13 +118,13 @@ void PriorityQueue<T>::remove(const int& index){
       max_heapify(index);
 }
 
-template<class T>
-bool PriorityQueue<T>::is_empty() const {
+template<class T, class Compare>
+bool PriorityQueue<T,Compare>::is_empty() const {
    return size == 0;
 }
 
-template<class T>
-int PriorityQueue<T>::find(const T& item) const {
+template<class T, class Compare>
+int PriorityQueue<T,Compare>::find(const T& item) const {
    int index = -1;
    /*
       Find can be parallelized, and it's good to do so
@@ -152,8 +152,8 @@ int PriorityQueue<T>::find(const T& item) const {
    return index;
 }
 
-template<class T>
-void PriorityQueue<T>::invalidate(const T& item) {
+template<class T, class Compare>
+void PriorityQueue<T,Compare>::invalidate(const T& item) {
    int index = find(item);
    /* Don't throw error if item not in list -- just return */
    if(index == -1)
@@ -162,10 +162,10 @@ void PriorityQueue<T>::invalidate(const T& item) {
    data[index] = item;
 
    /* This is the algorithm expressed in class, + max_heapify below. */
-   if((index > 0) && (data[parent_of(index)] < data[index])) {
+   if((index > 0) && (compare(data[index],data[parent_of(index)]))) {
       for(data[index] = item; index > 0; index = parent_of(index))
-         if(data[parent_of(index)] < data[index])
-            std::swap(data[parent_of(index)],data[index]);
+         if(compare(data[index],data[parent_of(index)]))
+            std::swap(data[index],data[parent_of(index)]);
          else
             /*
                Presumably no reason to max_heapify since

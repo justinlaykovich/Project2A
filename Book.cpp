@@ -23,12 +23,12 @@ Employee* Book::circulate(Date date,std::vector<Employee> employees) {
    circulation_start_date = date;
    circulation_last_date = date;
    archived = false;
-   waiting_list = PriorityQueue<Employee>(employees);
+   waiting_list = PriorityQueue<Employee,CompareEmployee>(employees);
    current_employee = waiting_list.extract_max();
    return get_current_employee();
 }
 
-Employee* Book::pass_on(Date date) {
+Employee* Book::get_next_employee(Date date) {
    circulation_last_date = date;
 
    if(!waiting_list.is_empty()) {

@@ -24,7 +24,7 @@ void Library::add_employee(const string& employee_name) {
    for(int i = 0; i < size; i++)
       books[i].add(new_employee);
 
-   std::cout << "Added " << new_employee.name << " to employees." << std::endl;
+   std::cout << "Added " << new_employee.get_name() << " to employees." << std::endl;
 }
 
 void Library::circulate_book(const string& book_name, const Date& date) {
@@ -44,8 +44,9 @@ void Library::circulate_book(const string& book_name, const Date& date) {
    /* Sends to the first employee. extract_max() is log(n) on employees list */
 
    Employee* employee = book.circulate(date,employees);
-   employees[find(employee->name,employees)] = *employee;
    employee->receive_book(0);
+
+   employees[find(employee->get_name(),employees)] = *employee;
 
    /*
       Updates with new values - adding book count changes priority.
@@ -77,9 +78,9 @@ void Library::pass_on(const string& book_name, const Date& date) {
    employee.pass_on(date - book->get_last_date());
 
    /* Modifies employee in Employee list */
-   employees[find(employee.name,employees)] = employee;
+   employees[find(employee.get_name(),employees)] = employee;
 
-   Employee* newEmployee = book->pass_on(date);
+   Employee* newEmployee = book->get_next_employee(date);
 
    if(newEmployee == NULL) {
       std::cout << "Moved " << book->get_name() << " to archive." << std::endl;
@@ -105,10 +106,10 @@ void Library::pass_on(const string& book_name, const Date& date) {
       update_employee(*newEmployee);
       update_employee(employee);
 
-      std::cout << "Moved " << book->get_name() << " from " << employee.name << " to " << newEmployee->name << std::endl;
-      std::cout << newEmployee->name << " wait time: " << newEmployee->waiting_time << std::endl;
+      std::cout << "Moved " << book->get_name() << " from " << employee.get_name() << " to " << newEmployee->get_name() << std::endl;
+      std::cout << newEmployee->get_name() << " wait time: " << newEmployee->get_waiting_time() << std::endl;
    }
-   std::cout << employee.name << " retaining time: " << employee.retaining_time << std::endl;
+   std::cout << employee.get_name() << " retaining time: " << employee.get_retaining_time() << std::endl;
 }
 
 template<typename T>

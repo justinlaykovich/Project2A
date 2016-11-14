@@ -5,7 +5,7 @@ class Book {
 public:
    Book(const string&);
    Employee* circulate(Date,std::vector<Employee>);
-   Employee* pass_on(Date);
+   Employee* get_next_employee(Date);
    Employee* get_current_employee();
    const Date& get_last_date() const;
    const Date& get_start_date() const;
@@ -28,7 +28,7 @@ private:
    /* Keeps track of employee currently holding book */
    Employee current_employee;
    bool archived = true;
-   PriorityQueue<Employee> waiting_list;
+   PriorityQueue<Employee,CompareEmployee> waiting_list;
 
 };
 

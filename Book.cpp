@@ -35,7 +35,7 @@ Employee* Book::get_next_employee(Date date) {
    return NULL;
 }
 
-Employee* Book::circulate(Date date,std::vector<Employee> employees) {
+Employee* Book::circulate(const Date& date,const std::vector<Employee>& employees) {
    if(employees.size() == 0)
       throw runtime_error("No employees to circulate to.");
 
@@ -54,10 +54,12 @@ Employee* Book::circulate(Date date,std::vector<Employee> employees) {
 }
 
 void Book::update(const Employee& employee) {
+   /* Updates both the current employee and waiting_list. */
+
    waiting_list.update(employee);
-   if(employee == current_employee) {
+
+   if(employee == current_employee)
       current_employee = employee;
-   }
 }
 
 void Book::add(const Employee& employee) {

@@ -5,7 +5,7 @@ class Book {
 public:
    Book(const string&);
 
-   Employee* circulate(Date,std::vector<Employee>);
+   Employee* circulate(const Date&,const std::vector<Employee>&);
    Employee* get_next_employee(Date);
    Employee* get_current_employee();
    void update(const Employee&);

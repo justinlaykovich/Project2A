@@ -11,7 +11,7 @@
    Implemented by max_heap.
 */
 
-template <class T, class Compare>
+template <class T, class Compare = std::greater<T> >
 class PriorityQueue {
 public:
    PriorityQueue();

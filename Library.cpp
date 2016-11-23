@@ -20,9 +20,10 @@ void Library::add_employee(const string& employee_name) {
       this adds to the waiting list of all current, in-circulation books.
    */
 
-   int size = books.size();
+   size_t size = books.size();
+
    #pragma omp parallel for num_threads(4)
-   for(int i = 0; i < size; i++)
+   for(unsigned int i = 0; i < size; i++)
       books[i].add(new_employee);
 
    std::cout << "Added " << new_employee.get_name() << " to employees." << std::endl;

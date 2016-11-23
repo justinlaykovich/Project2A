@@ -35,7 +35,7 @@ private:
 class CompareEmployee {
 public:
    bool operator () (const Employee& lhs, const Employee& rhs) const {
-      return lhs.priority() > rhs.priority();
+      return lhs.priority() < rhs.priority();
    }
 };
 

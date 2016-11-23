@@ -7,7 +7,8 @@ PriorityQueue<T,Compare>::PriorityQueue() {
 }
 
 template<class T, class Compare>
-PriorityQueue<T,Compare>::PriorityQueue(const std::vector<T>& inserted) {
+template<typename Container>
+PriorityQueue<T,Compare>::PriorityQueue(const Container& inserted) {
 
    /*
       Each insert is log(n) individually.
@@ -17,9 +18,8 @@ PriorityQueue<T,Compare>::PriorityQueue(const std::vector<T>& inserted) {
 
    size = 0;
 
-   int insertSize = inserted.size();
-   for(int i = 0; i < insertSize; i++)
-      insert(inserted[i]);
+   for(auto itr = inserted.begin(); itr != inserted.end(); itr++)
+      insert(*itr);
 }
 
 template<class T, class Compare>
@@ -29,8 +29,8 @@ void PriorityQueue<T,Compare>::insert(const T& item) {
 
    /* log(n) insert */
    for(int i = size; i > 0; i = parent_of(i))
-      if(compare(data[i],data[parent_of(i)]))
-         std::swap(data[i],data[parent_of(i)]);
+      if(compare(data[parent_of(i)],data[i]))
+         std::swap(data[parent_of(i)],data[i]);
       else
          break;
 
@@ -61,9 +61,9 @@ void PriorityQueue<T,Compare>::max_heapify(int i) {
       if(left >= size || right >= size)
          break;
 
-      if (compare(data[left],data[largest]))
+      if (compare(data[largest],data[left]))
           largest = left;
-      if (compare(data[right],data[largest]))
+      if (compare(data[largest],data[right]))
           largest = right;
 
       if (largest != i) {
@@ -75,7 +75,7 @@ void PriorityQueue<T,Compare>::max_heapify(int i) {
    }
 }
 
-template<class T,class Compare>
+template<class T, class Compare>
 T PriorityQueue<T,Compare>::extract_max() {
 
    /* pop is log(n) and so the function in total is log(n) */
@@ -84,7 +84,7 @@ T PriorityQueue<T,Compare>::extract_max() {
    return item;
 }
 
-template<class T,class Compare>
+template<class T, class Compare>
 const T& PriorityQueue<T,Compare>::top() const {
 
    /* Constant time, O(1) */
@@ -95,7 +95,7 @@ const T& PriorityQueue<T,Compare>::top() const {
    return data[0];
 }
 
-template<class T,class Compare>
+template<class T, class Compare>
 void PriorityQueue<T,Compare>::pop() {
    if(size == 0)
       throw runtime_error("No item in queue.");
@@ -175,10 +175,10 @@ void PriorityQueue<T,Compare>::update(const T& item) {
    data[index] = item;
 
    /* This is the algorithm expressed in class, + max_heapify below. */
-   if((index > 0) && (compare(data[index],data[parent_of(index)]))) {
+   if((index > 0) && (compare(data[parent_of(index)],data[index]))) {
       for(data[index] = item; index > 0; index = parent_of(index))
-         if(compare(data[index],data[parent_of(index)]))
-            std::swap(data[index],data[parent_of(index)]);
+         if(compare(data[parent_of(index)],data[index]))
+            std::swap(data[parent_of(index)],data[index]);
          else
             /*
                Presumably no reason to max_heapify since

@@ -11,11 +11,14 @@
    Implemented by max_heap.
 */
 
-template <class T, class Compare = std::greater<T> >
+template <class T, class Compare = std::less<T> >
 class PriorityQueue {
 public:
    PriorityQueue();
-   PriorityQueue(const std::vector<T>&);
+
+   template<typename Container = std::vector<T> >
+   PriorityQueue(const Container&);
+
    void insert(const T&);
    /*
       update updates list by specifying that a value has been modified

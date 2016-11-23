@@ -25,17 +25,12 @@ PriorityQueue<T,Compare>::PriorityQueue(const std::vector<T>& inserted) {
 template<class T, class Compare>
 void PriorityQueue<T,Compare>::insert(const T& item) {
 
-   /*
-      The expected behaviour here is that the last item is at the top,
-      all things being equal. All things not equal, highest priority at top.
-   */
-
    data.push_back(item);
 
    /* log(n) insert */
    for(int i = size; i > 0; i = parent_of(i))
-      if(!compare(data[parent_of(i)],data[i]))
-         std::swap(data[parent_of(i)],data[i]);
+      if(compare(data[i],data[parent_of(i)]))
+         std::swap(data[i],data[parent_of(i)]);
       else
          break;
 
